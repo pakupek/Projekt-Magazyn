@@ -39,45 +39,96 @@ def add_item():
         print(f'{name}\t{quantity}\t\t{unit}\t{price}')
 
 def get_costs():
-    costs = 0
-    for quantity,price in zip(quantities,prices):
-        sum = 0
+    with open('magazyn_items.csv', 'r')as itemsfile:
+        itemsfile = csv.reader(itemsfile)
+        headers = next(itemsfile)
+        item_quantities = []
+        item_prices = []
         
-        sum += quantity * price
-        costs += sum   
-    print(costs)
+        
+        for wiersz in itemsfile:
+            item_quantities.append(wiersz[1])
+            item_prices.append(wiersz[3])       
+        for i in range(len(item_quantities)):
+            item_quantities[i] = float(item_quantities[i])
+        for i in range(len(item_prices)):
+            item_prices[i] = float(item_prices[i])
+        print(item_quantities)  
+        print(item_prices)
+        costs = 0      
+        for i in range(len(item_prices)):   
+            count = 0
+            count = item_quantities[i]*item_prices[i]
+            costs = costs + count         
+        print("Total count :", costs)
+        #print(costs)
 
 def get_income():
-    income = 0
-    for quantity,price in zip(sold_quantities,sold_prices): 
-        cost = 0
-        cost += quantity * price
-        income += cost
-    print(income)
+    with open('magazyn_sales.csv', 'r')as salefile:
+        salefile = csv.reader(salefile)
+        headers = next(salefile)
+        sale_quantity = []
+        sale_price = []
+        income = 0
+        for wiersz in salefile:
+            sale_quantity.append(wiersz[1])
+            sale_price.append(wiersz[3])
+        for i in range(len(sale_quantity)):
+            sale_quantity[i] = int(sale_quantity[i])
+        for i in range(len(sale_price)):
+            sale_price[i] = float(sale_price[i])
+        for i in range(len(sale_quantity)):
+            count = 0
+            count = float(sale_quantity[i]*sale_price[i])
+            income += count
+        print(income)
 
 def show_revenue():
-    with open('magazyn_sales.csv', 'r')as sellfile:
-        income = 0
-        headers = next(sellfile)
-        sellfile = csv.reader(sellfile)
-        sold_items = ['Name','Quantity','Unit','UnitPrice (PLN)'] 
-        for quantity, in sold_quantities:
-            for price in sold_prices:
-                cost = 0
-                cost += quantity * price
-                income += cost
-    with open('magazyn_items.csv', 'r') as itemsfile:
-        costs = 0
+    with open('magazyn_items.csv', 'r')as itemsfile:
         itemsfile = csv.reader(itemsfile)
-        headers = next(itemsfile)  
-        for quantity,price in zip(quantities,prices):
-            sum = 0        
-            sum = quantity * price
-            costs += sum  
+        headers = next(itemsfile)
+        item_quantities = []
+        item_prices = []
+        
+        
+        for wiersz in itemsfile:
+            item_quantities.append(wiersz[1])
+            item_prices.append(wiersz[3])       
+        for i in range(len(item_quantities)):
+            item_quantities[i] = float(item_quantities[i])
+        for i in range(len(item_prices)):
+            item_prices[i] = float(item_prices[i])
+        print(item_quantities)  
+        print(item_prices)
+        costs = 0      
+        for i in range(len(item_prices)):   
+            count = 0
+            count = item_quantities[i]*item_prices[i]
+            costs = costs + count         
+        
+        
+    with open('magazyn_sales.csv', 'r')as salefile:
+        salefile = csv.reader(salefile)
+        headers = next(salefile)
+        sale_quantity = []
+        sale_price = []
+        income = 0
+        for wiersz in salefile:
+            sale_quantity.append(wiersz[1])
+            sale_price.append(wiersz[3])
+        for i in range(len(sale_quantity)):
+            sale_quantity[i] = int(sale_quantity[i])
+        for i in range(len(sale_price)):
+            sale_price[i] = float(sale_price[i])
+        for i in range(len(sale_quantity)):
+            count = 0
+            count = float(sale_quantity[i]*sale_price[i])
+            income += count
+        
     print("Revenue breakdown (PLN)")
-    print("Income :",income)
-    print("Costs: ",costs)
-    print("----------\nRevenue: ", income - costs )
+    print("Income :",round(income,2))
+    print("Costs: ",round(costs,2))
+    print("----------\nRevenue: ", round(income - costs,2))
 
 
 def sell_item(name): 
@@ -167,7 +218,7 @@ def interface(load_items_from_csv):
 
 #Costs
         elif direct == 'costs':
-            get_costs
+            get_costs()
             direct = input("What would you like to do? (add,sell,show,show_revenue,income,costs,save,load,exit):")
 
 #Saving
